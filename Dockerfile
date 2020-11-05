@@ -14,13 +14,15 @@ ENV PYTHONUNBUFFERED 1
 # install psycopg2 dependencies
 RUN apk update \
     && apk add postgresql-dev gcc python3-dev musl-dev
+
+RUN apk add --no-cache --upgrade bash
     
 # install dependencies
 RUN pip install --upgrade pip
-ADD requirements.txt /code/
+COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
-# Copy the current directory contents into the container at /music_service
-ADD . /code/
+# Copy the current directory contents into the container at /code
+COPY . /code
 
-CMD ["python", "/code/manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
